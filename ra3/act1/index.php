@@ -48,6 +48,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="David Pérez Ruiz">
     <title>RA3. Listado de ejercicios</title>
 </head>
 <body>
@@ -58,5 +59,6 @@
             <dd><?= $ej["descripcion"]; ?></dd>
             <dd> <a href='<?= $ej["github"] ?>' target='_blank'>Código en github</a></dd>
         <?php } ?>
+    </dl>
 </body>
 </html>
