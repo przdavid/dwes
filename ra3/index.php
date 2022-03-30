@@ -8,7 +8,9 @@
  // Indexado de enlaces
  $actividades = [
      ["id" => "Actividad 1",
-     "enlace" => "./act1/index.php"]
+     "enlace" => "./act1/index.php"],
+     ["id" => "Actividad 2",
+     "enlace" => "./act2/index.php"]
  ];
 
 ?>
