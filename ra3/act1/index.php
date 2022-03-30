@@ -1,6 +1,6 @@
 <?php
 /**
- * Indexación de los ejercicios mediante un arrray.
+ * Indexación de los ejercicios del RA3 ACT1 mediante un arrray.
  * 
  * @author David Pérez Ruiz
  */
@@ -49,10 +49,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="David Pérez Ruiz">
-    <title>RA3. Listado de ejercicios</title>
+    <title>RA3 ACT1. Listado de ejercicios</title>
 </head>
 <body>
-    <h1>RA3. Listado de ejercicios</h1>
+    <h1>RA3 ACT1. Listado de ejercicios</h1>
     <dl>
         <?php foreach ($ejercicios as $ej) { ?>
             <dt><?= $ej['id'] ?>. <a href='<?= $ej["enlace"] ?>' target='_blank'><?= $ej["titulo"] ?></a></dt>
