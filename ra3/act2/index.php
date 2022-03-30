@@ -25,7 +25,7 @@
      checkbox que permita seleccionar las provincias que pertenecen a la comunidad. En respuesta al
      formulario, la aplicación mostrará el número de aciertos y fallos.
      <br>
-     Inclute una opción que permita visualizar las opciones correctas.",
+     Incluye una opción que permita visualizar las opciones correctas.",
      "enlace" => "ej02_provincias.php",
      "github" => "https://github.com/przdavid/dwes/blob/main/ra3/act2/ej02_provincias.php"],
      ["id" => 3,
