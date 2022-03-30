@@ -1,9 +1,9 @@
 <?php
 /**
- * Ejercicio 2. Número aleatorio.
+ * Ejercicio 1. Países y capitales.
  * Diseña y almacena en un array una lista de países junto con sus capitales.
  * Muestra un formulario que permita al usuario introducir las capitales de los países presentados.
- * En respuesta al formulario, la aplicación mostrará el número  de aciertos y fallos.
+ * En respuesta al formulario, la aplicación mostrará el número de aciertos y fallos.
  *
  * Incluye una opción que permita visualizar las opciones correctas.
  *
@@ -45,6 +45,8 @@
      "Australia" => "Canberra",
      "Fiyi" => "Suva"
  ];
+
+ $numAciertos = $numFallos = 0;
 ?>
 
 <style>
@@ -103,9 +105,11 @@
                 </div>
                 <?php if (isset($_POST["comprobar"]) or isset($_POST["mostrar"])) { ?>
                     <span class="respuesta">
-                        <?php if (strcmp(strtolower($respuesta), strtolower($paisCapital[$pais])) == 0) { ?>
+                        <?php if (strcmp(strtolower($respuesta), strtolower($paisCapital[$pais])) == 0) { 
+                            $numAciertos++; ?>
                             <div id="correcto">✓</div>
-                        <?php } else { ?>
+                        <?php } else {
+                            $numFallos++; ?>
                             <div id="incorrecto">✗</div>
                         <?php } ?>
                     </span>
@@ -132,5 +136,11 @@
             <?php } ?>
         </div>
     </form>
+    <?php if (isset($_POST["comprobar"]) or isset($_POST["mostrar"])) { ?>
+        <ul>
+            <li id="correcto">Número de aciertos: <?= $numAciertos ?> </li>
+            <li id="incorrecto">Número de fallos: <?= $numFallos ?> </li>
+        </ul>
+    <?php } ?>
 </body>
 </html>
