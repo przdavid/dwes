@@ -12,63 +12,147 @@
  * @author David Pérez Ruiz
  */
 
- // Array de países y capitales
- $paisCapital = [
-     "Canadá" => "Ottawa",
-     "Colombia" => "Bogotá",
-     "Venezuela" => "Caracas",
-     "Argentina" => "Buenos Aires",
-     "Ecuador" => "Quito",
-     "Brasil" => "Brasilia",
-     "Noruega" => "Oslo",
-     "Suecia" => "Estocolmo",
-     "Alemania" => "Berlín",
-     "Italia" => "Roma",
-     "Grecia" => "Atenas",
-     "Rusia" => "Moscú",
-     "Portugal" => "Lisboa",
-     "Francia" => "París",
-     "Reino Unido" => "Londres",
-     "España" => "Madrid",
-     "India" => "Nueva Delhi",
-     "Tailandia" => "Bangkok",
-     "Malasia" => "Kuala Lumpur",
-     "China" => "Pekín",
-     "Japón" => "Tokio",
-     "Mongolia" => "Ulán Bator",
-     "Nueva Zelanda" => "Wellington",
-     "Marruecos" => "Rabat",
-     "Mozambique" => "Maputo",
-     "Egipto" => "El Cairo",
-     "Argelia" => "Argel",
-     "Madagascar" => "Antananarivo",
-     "Australia" => "Canberra",
-     "Fiyi" => "Suva"
- ];
+// Sesión
+session_start();
+if (isset($_SESSION["SopaLetras"])) {
+    $sopa = $_SESSION["SopaLetras"];
+    $capitalesSopa = $_SESSION["CapitalesSopa"];
+}
 
- $numAciertos = $numFallos = 0;
+// Constantes
+define("NUMFILAS", 20);
+define("NUMCOLUMNAS", 20);
+
+
+// Variables del formulario de países y capitales
+$paisCapital = [
+    "Venezuela" => "Caracas",
+    "Ecuador" => "Quito",
+    "Brasil" => "Brasilia",
+    "Noruega" => "Oslo",
+    "Suecia" => "Estocolmo",
+    "Italia" => "Roma",
+    "Grecia" => "Atenas",
+    "Portugal" => "Lisboa",
+    "Reino Unido" => "Londres",
+    "España" => "Madrid",
+    "Japón" => "Tokio",
+    "Marruecos" => "Rabat",
+    "Argelia" => "Argel",
+    "Australia" => "Canberra",
+    "Fiyi" => "Suva"
+];
+$numAciertos = $numFallos = 0;
+
+// Variables de la sopa de letras
+$capitales = array_values($paisCapital);
+$capitales = array_flip($capitales);
+$capitales = array_change_key_case($capitales, CASE_UPPER);
+
+if(!isset($_SESSION["CapitalesSopa"])) {
+    $capitalesSopa = array_rand($capitales, 5);
+    $_SESSION["CapitalesSopa"] = $capitalesSopa;
+}
+
+$arrayDirecciones = ["↓" => [1, 0], "↑" => [-1, 0],
+"→" => [0, 1], "←" => [0, -1],
+"↖" => [-1, -1], "↗" => [-1, 1],
+"↘" => [1, 1], "↙" => [1, -1]];
+
+if (!isset($_SESSION["SopaLetras"])) {
+    $sopa = [];
+    for ($f = 0; $f < NUMFILAS; $f++) {
+        for ($c = 0; $c < NUMCOLUMNAS; $c++) {
+            $sopa[$f][$c] = "";
+        }
+    }
+
+    for ($e = 0; $e < count($capitalesSopa); $e++) {
+        $capital = $capitalesSopa[$e];
+
+        do {
+            $casillaValida = true;
+            $filaInicial = mt_rand(0, 19);
+            $columnaInicial = mt_rand(0, 19);
+            $direccion = array_rand($arrayDirecciones);
+            $direccionFila = $arrayDirecciones[$direccion][0];
+            $direccionColumna = $arrayDirecciones[$direccion][1];
+
+            $filaFinal = $filaInicial + (strlen($capital) * $direccionFila) + (($direccionFila > 0 ? -1 : $direccionFila < 0) ? +1 : 0);
+            $columnaFinal = $columnaInicial + (strlen($capital) * $direccionColumna) + (($direccionColumna > 0 ? -1 : $direccionColumna < 0) ? +1 : 0);
+
+            if ($filaFinal > NUMFILAS or $columnaFinal > NUMCOLUMNAS or $filaFinal < 0 or $columnaFinal < 0) {
+                $casillaValida = false;
+            }
+
+            if ($casillaValida) {
+                $f = $filaInicial;
+                $c = $columnaInicial;
+
+                for ($i = 0; $i < strlen($capital); $i++) {
+                    if ((strcmp($sopa[$f][$c], "") != 0) and (strcmp($sopa[$f][$c], $capital[$i]) != 0)) {
+                        $casillaValida = false;
+                    }
+                
+                    $f += $direccionFila;
+                    $c += $direccionColumna;
+                }
+            }
+        } while (!$casillaValida);
+
+        $f = $filaInicial;
+        $c = $columnaInicial;
+
+        for ($i = 0; $i < strlen($capital); $i++) {
+            $sopa[$f][$c] = $capital[$i];
+            
+            $f += $direccionFila;
+            $c += $direccionColumna;
+        }
+    }
+
+    $abecedario = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+ "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+    for ($x = 0; $x < NUMFILAS; $x++) {
+        for ($y = 0; $y < NUMCOLUMNAS; $y++) {
+            if (strcmp($sopa[$x][$y], "") == 0) {
+                $sopa[$x][$y] = $abecedario[array_rand($abecedario)];
+            }
+        }
+    }
+
+    $_SESSION["SopaLetras"] = $sopa;
+}
+
 ?>
-
-<style>
-    .casilla {
-        display: flex;
-        margin-block: 5px;
-    }
-    .pais {
-        inline-size: 120px;
-    }
-    .respuesta {
-        margin-inline: 10px;
-    }
-    #correcto {
-        color: green;
-    }
-    #incorrecto {
-        color: red;
-    }
-    .solucion {
-        color: orange;
-    }
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <style>
+        .casilla {
+            display: flex;
+            margin-block: 5px;
+        }
+        .pais {
+            inline-size: 120px;
+        }
+        .respuesta {
+            margin-inline: 10px;
+        }
+        #correcto {
+            color: green;
+        }
+        #incorrecto {
+            color: red;
+        }
+        .solucion {
+            color: orange;
+        }
+        .sopa {
+            display: grid;
+            grid-template-columns: repeat(10, 50px);
+            grid-template-rows: repeat(10, 50px);
+        }
 </style>
 
 <!DOCTYPE html>
@@ -142,5 +226,27 @@
             <li id="incorrecto">Número de fallos: <?= $numFallos ?> </li>
         </ul>
     <?php } ?>
+    <h2>Sopa de letras</h2>
+    <div>
+        Capitales a buscar:
+        <ul>
+            <?php foreach ($capitalesSopa as $capital) { ?>
+                <li><?= $capital ?></li>
+            <?php } ?>
+        </ul>
+    </div>
+    <div>
+        <?php
+            echo "<table border=1>";
+            for($i = 0; $i < NUMFILAS; $i++) {
+                echo "<tr>";
+                for($j = 0; $j < NUMCOLUMNAS; $j++) {
+                    echo "<td>" . $sopa[$i][$j] . "</td>";
+                }
+                echo "</tr>";
+            }
+            echo "</table>";
+        ?>
+    </div>
 </body>
 </html>
